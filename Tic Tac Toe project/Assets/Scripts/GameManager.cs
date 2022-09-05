@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button[] gridButtoms;
     [SerializeField] private int[] markedSpaces = new int[9];
     private int[] check = new int[8]; // Array of chacked positions 
+    public GameObject[] winningLine;
+    public Text winnerText;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
         
         gridButtoms[buttonNumber].image.sprite = playerIcon[whoseTurn];
         gridButtoms[buttonNumber].interactable = false;
-        markedSpaces[buttonNumber] = whoseTurn+1;
+        markedSpaces[buttonNumber] = whoseTurn + 1;
 
         turnsCounter++;
         if (turnsCounter > 4)
@@ -81,13 +83,32 @@ public class GameManager : MonoBehaviour
         
         for (int i = 0; i < check.Length; i++)
         {
-            if (check[i] == 0 | check[i] == 3)
+            if (check[i] == 3*(whoseTurn + 1))
             {
-                Debug.Log("Player" + whoseTurn + "won!");
-                //return;
+                DisplayWiner(i);
+                return;
             }
         }
     }
 
+
+    void DisplayWiner(int index)
+    {
+        winnerText.gameObject.SetActive(true);
+        if (whoseTurn == 0)
+        {
+            winnerText.text = "Player X won!";
+        }
+        if (whoseTurn == 1)
+        {
+            winnerText.text = "Player O won!";
+        }
+        winningLine[index].SetActive(true);
+
+        for (int i = 0; i < markedSpaces.Length; i++)
+        {
+            gridButtoms[i].interactable = false;
+        }
+    }
 
 }
