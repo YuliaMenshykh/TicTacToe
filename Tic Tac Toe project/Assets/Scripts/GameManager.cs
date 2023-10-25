@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private int whoseTurn; // 0 = x, 1 = O
     [SerializeField] private int turnsCounter;
-    [SerializeField] private GameObject[] turnsIcon;
+    [SerializeField] private GameObject[] turnsIcon;// marking whose turn it is 
+    [SerializeField] private GameObject FadeBackground;
     [SerializeField] private Sprite[] playerIcon;
     [SerializeField] private Button[] gridButtoms;
     [SerializeField] private int[] markedSpaces = new int[9];
@@ -47,10 +47,16 @@ public class GameManager : MonoBehaviour
         gridButtoms[buttonNumber].image.sprite = playerIcon[whoseTurn];
         gridButtoms[buttonNumber].interactable = false;
         markedSpaces[buttonNumber] = whoseTurn + 1;
-
         turnsCounter++;
-        if (turnsCounter > 4)
+
+        if (turnsCounter >= 5)
         {
+            if (turnsCounter >= 9)
+            {
+                FadeBackground.SetActive(true);
+                winnerText.gameObject.SetActive(true);
+                winnerText.text = "Try again";
+            }
             WinnerChecking();
         }
 
@@ -89,6 +95,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
         }
+      
     }
 
 
@@ -97,14 +104,17 @@ public class GameManager : MonoBehaviour
         winnerText.gameObject.SetActive(true);
         if (whoseTurn == 0)
         {
+            FadeBackground.SetActive(true);
             winnerText.text = "Player X won!";
         }
         if (whoseTurn == 1)
         {
+            FadeBackground.SetActive(true);
             winnerText.text = "Player O won!";
         }
+        Debug.Log("winningLine : " + index);
         winningLine[index].SetActive(true);
-
+        
         for (int i = 0; i < markedSpaces.Length; i++)
         {
             gridButtoms[i].interactable = false;
